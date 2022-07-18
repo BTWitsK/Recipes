@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Service
 public class RecipeService {
+    //todo: implement methods for searching recipe by name, searching by category,
     private final RecipeRepository recipeRepository;
 
     @Autowired

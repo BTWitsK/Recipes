@@ -13,30 +13,27 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "RECIPES")
 public class Recipe {
+    //todo: implement (not blank)fields date(min 8) and category
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(nullable = false)
     @JsonIgnore
     private Long id;
 
     @NotBlank
-    @Column(name = "name")
     private String name;
 
     @NotBlank
-    @Column(name = "description")
     private String description;
 
     @NotEmpty
     @ElementCollection
     @CollectionTable(name = "INGREDIENTS", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "ingredients")
     private List<String> ingredients;
 
     @NotEmpty
     @ElementCollection
     @CollectionTable(name = "DIRECTIONS", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "directions")
     private List<String> directions;
 
 }
