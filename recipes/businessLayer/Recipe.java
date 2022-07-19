@@ -1,10 +1,12 @@
 package recipes.businessLayer;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -13,7 +15,6 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "RECIPES")
 public class Recipe {
-    //todo: implement (not blank)fields date(min 8) and category
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
@@ -22,6 +23,12 @@ public class Recipe {
 
     @NotBlank
     private String name;
+
+    @NotBlank
+    private String category;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate date;
 
     @NotBlank
     private String description;

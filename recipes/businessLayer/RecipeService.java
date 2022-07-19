@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import recipes.persistenceLayer.RecipeRepository;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
-    //todo: implement methods for searching recipe by name, searching by category,
+    //todo: implement methods for searching by category, add date when saving and updating
     private final RecipeRepository recipeRepository;
 
     @Autowired
@@ -20,7 +22,18 @@ public class RecipeService {
         return recipeRepository.findById(id);
     }
 
+    public List<Recipe> getRecipesByName(String name) {
+        //needs testing
+        ArrayList<Recipe> recipeList = new ArrayList<>();
+        recipeRepository.findAll().forEach(recipeList::add);
+        return recipeList.stream()
+                .filter(recipe -> recipe.getName().toLowerCase().contains(name.toLowerCase()))
+                .sorted(Comparator.comparing(Recipe::getDate))
+                .collect(Collectors.toList());
+    }
+
     public void addRecipe(Recipe recipe) {
+        recipe.setDate(LocalDate.now());
         recipeRepository.save(recipe);
     }
 
