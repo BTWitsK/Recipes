@@ -10,7 +10,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
-    //todo: implement methods for searching by category, add date when saving and updating
     private final RecipeRepository recipeRepository;
 
     @Autowired
@@ -28,6 +27,16 @@ public class RecipeService {
         recipeRepository.findAll().forEach(recipeList::add);
         return recipeList.stream()
                 .filter(recipe -> recipe.getName().toLowerCase().contains(name.toLowerCase()))
+                .sorted(Comparator.comparing(Recipe::getDate))
+                .collect(Collectors.toList());
+    }
+
+    public List<Recipe> getRecipesByCategory(String name) {
+        //needs testing
+        ArrayList<Recipe> recipeList = new ArrayList<>();
+        recipeRepository.findAll().forEach(recipeList::add);
+        return recipeList.stream()
+                .filter(recipe -> name.equalsIgnoreCase(recipe.getCategory()))
                 .sorted(Comparator.comparing(Recipe::getDate))
                 .collect(Collectors.toList());
     }
