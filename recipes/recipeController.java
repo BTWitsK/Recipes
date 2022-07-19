@@ -9,6 +9,9 @@ import recipes.businessLayer.Recipe;
 import recipes.businessLayer.RecipeService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,6 +19,10 @@ import java.util.Optional;
 @Validated
 //todo: implement two new endpoints
 public class recipeController {
+    enum SearchParameters {
+        category,
+        name
+    }
 
     @Autowired
     RecipeService recipeService;
@@ -30,7 +37,25 @@ public class recipeController {
     }
 
     @GetMapping("/api/recipe/search")
-    //todo: implement searching by category / name
+    //implemented with enums, needs testing
+    public ResponseEntity<?> searchForRecipe(@RequestParam @NotNull @Size(max = 1)
+                                                 Map<SearchParameters, String> allParams) {
+        if (allParams.containsKey(SearchParameters.category)) {
+            return new ResponseEntity<>(
+                    Optional.of(recipeService.getRecipesByCategory(allParams.get(SearchParameters.category)))
+                            .orElse(Collections.emptyList()),
+                    HttpStatus.OK);
+
+        } else if (allParams.containsKey(SearchParameters.name)) {
+            return new ResponseEntity<>(
+                    Optional.of(recipeService.getRecipesByName(allParams.get(SearchParameters.name)))
+                            .orElse(Collections.emptyList()),
+                    HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+    }
     //take two mutually exclusive params,
     //category: returns json array of all recipes, search is case-insensitive sort by date newest first
     //name return all recipe with CONTAINS name, case insensitive sort by date
