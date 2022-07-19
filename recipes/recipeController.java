@@ -17,12 +17,7 @@ import java.util.Optional;
 
 @RestController
 @Validated
-//todo: implement two new endpoints
 public class recipeController {
-    enum SearchParameters {
-        category,
-        name
-    }
 
     @Autowired
     RecipeService recipeService;
@@ -37,28 +32,20 @@ public class recipeController {
     }
 
     @GetMapping("/api/recipe/search")
-    //implemented with enums, needs testing
-    //take two mutually exclusive params,
-    //category: returns json array of all recipes, search is case-insensitive sort by date newest first
-    //name return all recipe with CONTAINS name, case insensitive sort by date
-    //if not found should return empty Json array, if params incorrect return 400 or params not valid
-    //if search ok return code 200 (ok)
-    public ResponseEntity<?> searchForRecipe(@RequestParam @NotNull @Size(max = 1)
-                                                 Map<SearchParameters, String> allParams) {
-        if (allParams.containsKey(SearchParameters.category)) {
-            return new ResponseEntity<>(
-                    Optional.of(recipeService.getRecipesByCategory(allParams.get(SearchParameters.category)))
-                            .orElse(Collections.emptyList()),
-                    HttpStatus.OK);
-
-        } else if (allParams.containsKey(SearchParameters.name)) {
-            return new ResponseEntity<>(
-                    Optional.of(recipeService.getRecipesByName(allParams.get(SearchParameters.name)))
-                            .orElse(Collections.emptyList()),
-                    HttpStatus.OK);
-        } else {
+    public ResponseEntity<?> searchForRecipe(@RequestParam(name = "category", required = false) String category,
+                                             @RequestParam(name = "name", required = false) String name) {
+        if ((category == null && name == null) || (category != null && name != null)) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
+
+        if (category == null) {
+            return new ResponseEntity<>(
+                    Optional.of(recipeService.getRecipesByName(name)).orElse(Collections.emptyList()), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(
+                Optional.of(recipeService.getRecipesByCategory(category))
+                        .orElse(Collections.emptyList()), HttpStatus.OK);
     }
 
     @PostMapping("/api/recipe/new")
