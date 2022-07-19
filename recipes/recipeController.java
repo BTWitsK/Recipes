@@ -38,6 +38,11 @@ public class recipeController {
 
     @GetMapping("/api/recipe/search")
     //implemented with enums, needs testing
+    //take two mutually exclusive params,
+    //category: returns json array of all recipes, search is case-insensitive sort by date newest first
+    //name return all recipe with CONTAINS name, case insensitive sort by date
+    //if not found should return empty Json array, if params incorrect return 400 or params not valid
+    //if search ok return code 200 (ok)
     public ResponseEntity<?> searchForRecipe(@RequestParam @NotNull @Size(max = 1)
                                                  Map<SearchParameters, String> allParams) {
         if (allParams.containsKey(SearchParameters.category)) {
@@ -54,13 +59,7 @@ public class recipeController {
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
     }
-    //take two mutually exclusive params,
-    //category: returns json array of all recipes, search is case-insensitive sort by date newest first
-    //name return all recipe with CONTAINS name, case insensitive sort by date
-    //if not found should return empty Json array, if params incorrect return 400 or params not valid
-    //if search ok return code 200 (ok)
 
     @PostMapping("/api/recipe/new")
     public ResponseEntity<?> postRecipe(@Valid @RequestBody Recipe recipe) {
@@ -69,6 +68,21 @@ public class recipeController {
     }
 
     @PutMapping("/api/recipe/{id}")
+    public ResponseEntity<?> updateRecipe(@PathVariable long id, @Valid @RequestBody Recipe recipe) {
+        Optional<Recipe> oldRecipe = recipeService.getRecipeById(id);
+
+        if (oldRecipe.isPresent()) {
+            oldRecipe.get().setName(recipe.getName());
+            oldRecipe.get().setCategory(recipe.getCategory());
+            oldRecipe.get().setDescription(recipe.getDescription());
+            oldRecipe.get().setDirections(recipe.getDirections());
+            oldRecipe.get().setIngredients(recipe.getIngredients());
+            recipeService.addRecipe(oldRecipe.get());
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
     //todo: implement recipe updating
     //update recipe and date, return 204, if recipe not found return 404
     //return 400 badrequest if recipe doesn't follow restrictions
