@@ -70,9 +70,6 @@ public class recipeController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    //todo: implement recipe updating
-    //update recipe and date, return 204, if recipe not found return 404
-    //return 400 badrequest if recipe doesn't follow restrictions
 
     @DeleteMapping("/api/recipe/{id}")
     public ResponseEntity<?> deleteRecipe(@PathVariable long id) {
@@ -82,7 +79,6 @@ public class recipeController {
             recipeService.deleteRecipe(recipe.get());
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

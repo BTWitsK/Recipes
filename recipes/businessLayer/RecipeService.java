@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import recipes.persistenceLayer.RecipeRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,27 +22,25 @@ public class RecipeService {
     }
 
     public List<Recipe> getRecipesByName(String name) {
-        //needs testing
         ArrayList<Recipe> recipeList = new ArrayList<>();
         recipeRepository.findAll().forEach(recipeList::add);
         return recipeList.stream()
                 .filter(recipe -> recipe.getName().toLowerCase().contains(name.toLowerCase()))
-                .sorted(Comparator.comparing(Recipe::getDate))
+                .sorted(Comparator.comparing(Recipe::getDate).reversed())
                 .collect(Collectors.toList());
     }
 
     public List<Recipe> getRecipesByCategory(String name) {
-        //needs testing
         ArrayList<Recipe> recipeList = new ArrayList<>();
         recipeRepository.findAll().forEach(recipeList::add);
         return recipeList.stream()
                 .filter(recipe -> name.equalsIgnoreCase(recipe.getCategory()))
-                .sorted(Comparator.comparing(Recipe::getDate))
+                .sorted(Comparator.comparing(Recipe::getDate).reversed())
                 .collect(Collectors.toList());
     }
 
     public void addRecipe(Recipe recipe) {
-        recipe.setDate(LocalDate.now());
+        recipe.setDate(LocalDateTime.now());
         recipeRepository.save(recipe);
     }
 

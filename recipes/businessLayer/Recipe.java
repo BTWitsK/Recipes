@@ -6,7 +6,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -28,7 +28,7 @@ public class Recipe {
     private String category;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate date;
+    private LocalDateTime date;
 
     @NotBlank
     private String description;
@@ -42,6 +42,5 @@ public class Recipe {
     @ElementCollection
     @CollectionTable(name = "DIRECTIONS", joinColumns = @JoinColumn(name = "id"))
     private List<String> directions;
-
 }
 
