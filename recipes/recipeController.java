@@ -9,8 +9,6 @@ import recipes.businessLayer.Recipe;
 import recipes.businessLayer.RecipeService;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -40,7 +38,8 @@ public class recipeController {
 
         if (category == null) {
             return new ResponseEntity<>(
-                    Optional.of(recipeService.getRecipesByName(name)).orElse(Collections.emptyList()), HttpStatus.OK);
+                    Optional.of(recipeService.getRecipesByName(name))
+                            .orElse(Collections.emptyList()), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(
@@ -53,6 +52,9 @@ public class recipeController {
         recipeService.addRecipe(recipe);
         return new ResponseEntity<>(Map.of("id", recipe.getId()), HttpStatus.OK);
     }
+
+    @PostMapping("/api/register")
+    //Todo: implement registration endpoint
 
     @PutMapping("/api/recipe/{id}")
     public ResponseEntity<?> updateRecipe(@PathVariable long id, @Valid @RequestBody Recipe recipe) {
