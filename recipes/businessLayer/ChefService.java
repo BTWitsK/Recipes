@@ -5,7 +5,6 @@ import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 import recipes.persistenceLayer.ChefRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service

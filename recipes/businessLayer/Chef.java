@@ -20,19 +20,24 @@ import java.util.List;
 public class Chef implements UserDetails {
     //implemented the parent child relation with "elementCollection" instead of one to many annotation
     @Id
-    @Email
+    @Pattern(regexp = ".+@.+\\..+")
     @NotNull
     @Column(name = "ID")
-    private String username;
+    private String email;
 
     @NotBlank
-    @Min(8)
+    @Size(min = 8)
     @Column(name = "PASSWORD")
     private String password;
 
     @ElementCollection
     @CollectionTable(name = "RECIPES", joinColumns = @JoinColumn(name = "ID"))
     private List<Recipe> recipeList;
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -14,8 +14,7 @@ import java.util.*;
 @RestController
 @Validated
 public class recipeController {
-    //todo: add recipes to users when they create em
-    //todo: restrict adding and deleting recipes only to authors of them
+    //todo: restrict deleting recipes only to authors of them
     @Autowired
     ChefService chefService;
 
@@ -63,7 +62,7 @@ public class recipeController {
     @PostMapping("/api/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody Chef user) {
 
-        if (chefService.notRegistered(user)){
+        if (chefService.notRegistered(user)) {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             chefService.addUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -97,12 +96,17 @@ public class recipeController {
     }
 
     @DeleteMapping("/api/recipe/{id}")
-    public ResponseEntity<?> deleteRecipe(@PathVariable long id) {
+    public ResponseEntity<?> deleteRecipe(Authentication user, @PathVariable long id) {
+        Chef currentChef = (Chef) user.getPrincipal();
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
 
         if (recipe.isPresent()) {
-            recipeService.deleteRecipe(recipe.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if (chefService.canUpdateRecipe(currentChef, recipe.get())) {
+                recipeService.deleteRecipe(recipe.get());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
