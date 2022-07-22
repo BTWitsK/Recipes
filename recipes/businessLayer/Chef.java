@@ -16,9 +16,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "USER")
+@Table(name = "USERS")
 public class Chef implements UserDetails {
-
     @Id
     @Email
     @NotNull
@@ -40,16 +39,6 @@ public class Chef implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
-    public String getUsername() {
-        return username;
-    }
-
-    @Override
     public boolean isAccountNonExpired() {
         return true;
     }
@@ -68,6 +57,4 @@ public class Chef implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-//Todo: implement Chef Table
-
 }

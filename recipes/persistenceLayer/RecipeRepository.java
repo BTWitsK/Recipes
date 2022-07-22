@@ -7,5 +7,4 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 public interface RecipeRepository extends CrudRepository<Recipe, Long> {
 }
-//todo: implement user repository
 
