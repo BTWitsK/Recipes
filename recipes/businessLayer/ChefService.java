@@ -1,6 +1,7 @@
 package recipes.businessLayer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 import recipes.persistenceLayer.ChefRepository;
 
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ChefService {
+public class ChefService implements UserDetailsService {
     private final ChefRepository chefRepository;
 
     @Autowired
@@ -35,5 +36,16 @@ public class ChefService {
 
     public List<Recipe> getRecipes(Chef user) {
         return user.getRecipeList();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Chef> chefCheck = getChefByUserName(email);
+
+        if (chefCheck.isEmpty()) {
+            throw new UsernameNotFoundException("Not found: " + email);
+        }
+
+        return chefCheck.get();
     }
 }

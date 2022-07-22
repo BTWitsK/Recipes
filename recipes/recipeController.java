@@ -13,6 +13,8 @@ import java.util.*;
 @RestController
 @Validated
 public class recipeController {
+    //todo: add recipes to users when they create em
+    //todo: restrict adding and deleting recipes only to authors of them
     @Autowired
     ChefService chefService;
 
@@ -63,10 +65,8 @@ public class recipeController {
             chefService.addUser(user);
             return new ResponseEntity<>(HttpStatus.OK);
         }
-
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
-    //Todo: implement registration endpoint
 
     @PutMapping("/api/recipe/{id}")
     public ResponseEntity<?> updateRecipe(@PathVariable long id, @Valid @RequestBody Recipe recipe) {
