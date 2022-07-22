@@ -37,5 +37,4 @@ public class WebSecurityConfigurerImp extends WebSecurityConfigurerAdapter {
     public PasswordEncoder getEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

@@ -2,6 +2,7 @@ package recipes;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -52,7 +53,9 @@ public class recipeController {
     }
 
     @PostMapping("/api/recipe/new")
-    public ResponseEntity<?> postRecipe(@Valid @RequestBody Recipe recipe) {
+    public ResponseEntity<?> postRecipe(Authentication user, @Valid @RequestBody Recipe recipe) {
+
+        chefService.addRecipe((Chef) user.getPrincipal(), recipe);
         recipeService.addRecipe(recipe);
         return new ResponseEntity<>(Map.of("id", recipe.getId()), HttpStatus.OK);
     }
@@ -69,17 +72,25 @@ public class recipeController {
     }
 
     @PutMapping("/api/recipe/{id}")
-    public ResponseEntity<?> updateRecipe(@PathVariable long id, @Valid @RequestBody Recipe recipe) {
+    public ResponseEntity<?> updateRecipe(Authentication user,
+                                          @PathVariable long id, @Valid @RequestBody Recipe recipe) {
         Optional<Recipe> oldRecipe = recipeService.getRecipeById(id);
+        Chef currentChef = (Chef) user.getPrincipal();
 
         if (oldRecipe.isPresent()) {
-            oldRecipe.get().setName(recipe.getName());
-            oldRecipe.get().setCategory(recipe.getCategory());
-            oldRecipe.get().setDescription(recipe.getDescription());
-            oldRecipe.get().setDirections(recipe.getDirections());
-            oldRecipe.get().setIngredients(recipe.getIngredients());
-            recipeService.addRecipe(oldRecipe.get());
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            if (chefService.canUpdateRecipe(currentChef, oldRecipe.get())) {
+                oldRecipe.get().setName(recipe.getName());
+                oldRecipe.get().setCategory(recipe.getCategory());
+                oldRecipe.get().setDescription(recipe.getDescription());
+                oldRecipe.get().setDirections(recipe.getDirections());
+                oldRecipe.get().setIngredients(recipe.getIngredients());
+
+                recipeService.addRecipe(oldRecipe.get());
+                chefService.addRecipe(currentChef, oldRecipe.get());
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            } else {
+                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            }
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

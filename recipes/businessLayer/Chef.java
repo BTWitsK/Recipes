@@ -18,6 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "USERS")
 public class Chef implements UserDetails {
+    //implemented the parent child relation with "elementCollection" instead of one to many annotation
     @Id
     @Email
     @NotNull

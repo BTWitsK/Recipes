@@ -34,8 +34,12 @@ public class ChefService implements UserDetailsService {
         chefRepository.save(user);
     }
 
-    public List<Recipe> getRecipes(Chef user) {
-        return user.getRecipeList();
+    public boolean canUpdateRecipe(Chef user, Recipe recipe) {
+        if (user.getRecipeList().contains(recipe)) {
+            user.getRecipeList().remove(recipe);
+            return true;
+        }
+        return false;
     }
 
     @Override
