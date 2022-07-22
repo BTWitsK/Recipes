@@ -39,8 +39,13 @@ public class RecipeService {
                 .collect(Collectors.toList());
     }
 
-    public void addRecipe(Recipe recipe) {
+    public boolean isAuthor(Recipe recipe, Chef chef) {
+        return recipe.getAuthor().getEmail().equals(chef.getEmail());
+    }
+
+    public void addRecipe(Recipe recipe, Chef author) {
         recipe.setDate(LocalDateTime.now());
+        recipe.setAuthor(author);
         recipeRepository.save(recipe);
     }
 

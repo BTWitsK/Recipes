@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,21 +19,16 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "USERS")
 public class Chef implements UserDetails {
-    //implemented the parent child relation with "elementCollection" instead of one to many annotation
     @Id
     @Pattern(regexp = ".+@.+\\..+")
     @NotNull
-    @Column(name = "ID")
+    @Column(name = "EMAIL")
     private String email;
 
     @NotBlank
     @Size(min = 8)
     @Column(name = "PASSWORD")
     private String password;
-
-    @ElementCollection
-    @CollectionTable(name = "RECIPES", joinColumns = @JoinColumn(name = "ID"))
-    private List<Recipe> recipeList;
 
     @Override
     public String getUsername() {

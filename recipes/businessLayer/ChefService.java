@@ -28,19 +28,6 @@ public class ChefService implements UserDetailsService {
         chefRepository.save(user);
     }
 
-    public void addRecipe(Chef user, Recipe recipe) {
-        user.getRecipeList().add(recipe);
-        chefRepository.save(user);
-    }
-
-    public boolean canUpdateRecipe(Chef user, Recipe recipe) {
-        if (user.getRecipeList().contains(recipe)) {
-            user.getRecipeList().remove(recipe);
-            return true;
-        }
-        return false;
-    }
-
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         Optional<Chef> chefCheck = getChefByUserName(email);

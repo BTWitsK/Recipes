@@ -53,9 +53,10 @@ public class recipeController {
 
     @PostMapping("/api/recipe/new")
     public ResponseEntity<?> postRecipe(Authentication user, @Valid @RequestBody Recipe recipe) {
+        Chef currentChef = (Chef) user.getPrincipal();
+        Chef author = chefService.getChefByUserName(currentChef.getUsername()).get();
 
-        chefService.addRecipe((Chef) user.getPrincipal(), recipe);
-        recipeService.addRecipe(recipe);
+        recipeService.addRecipe(recipe, author);
         return new ResponseEntity<>(Map.of("id", recipe.getId()), HttpStatus.OK);
     }
 
@@ -75,21 +76,20 @@ public class recipeController {
                                           @PathVariable long id, @Valid @RequestBody Recipe recipe) {
         Optional<Recipe> oldRecipe = recipeService.getRecipeById(id);
         Chef currentChef = (Chef) user.getPrincipal();
+        Chef author = chefService.getChefByUserName(currentChef.getUsername()).get();
 
         if (oldRecipe.isPresent()) {
-            if (chefService.canUpdateRecipe(currentChef, oldRecipe.get())) {
+            if (recipeService.isAuthor(oldRecipe.get(), author)) {
                 oldRecipe.get().setName(recipe.getName());
                 oldRecipe.get().setCategory(recipe.getCategory());
                 oldRecipe.get().setDescription(recipe.getDescription());
                 oldRecipe.get().setDirections(recipe.getDirections());
                 oldRecipe.get().setIngredients(recipe.getIngredients());
-
-                recipeService.addRecipe(oldRecipe.get());
-                chefService.addRecipe(currentChef, oldRecipe.get());
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                recipeService.addRecipe(oldRecipe.get(), author);
             } else {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -98,10 +98,11 @@ public class recipeController {
     @DeleteMapping("/api/recipe/{id}")
     public ResponseEntity<?> deleteRecipe(Authentication user, @PathVariable long id) {
         Chef currentChef = (Chef) user.getPrincipal();
+        Chef author = chefService.getChefByUserName(currentChef.getUsername()).get();
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
 
         if (recipe.isPresent()) {
-            if (chefService.canUpdateRecipe(currentChef, recipe.get())) {
+            if (recipeService.isAuthor(recipe.get(), author)) {
                 recipeService.deleteRecipe(recipe.get());
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             } else {

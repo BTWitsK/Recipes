@@ -35,6 +35,11 @@ public class Recipe {
     @Column(name = "DATE")
     private LocalDateTime date;
 
+    @ManyToOne
+    @NotBlank
+    @JoinColumn(name = "ID")
+    private Chef author;
+
     @NotBlank
     @Column(name = "DESCRIPTION")
     private String description;
