@@ -20,6 +20,10 @@ public class ChefService {
         return chefRepository.findById(email);
     }
 
+    public boolean notRegistered(Chef user) {
+        return chefRepository.findById(user.getUsername()).isEmpty();
+    }
+
     public void addUser(Chef user) {
         chefRepository.save(user);
     }

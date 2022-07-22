@@ -1,24 +1,26 @@
 package recipes;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import recipes.businessLayer.Recipe;
-import recipes.businessLayer.RecipeService;
+import recipes.businessLayer.*;
 
 import javax.validation.Valid;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @Validated
 public class recipeController {
+    @Autowired
+    ChefService chefService;
 
     @Autowired
     RecipeService recipeService;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @GetMapping("/api/recipe/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable long id) {
@@ -54,6 +56,16 @@ public class recipeController {
     }
 
     @PostMapping("/api/register")
+    public ResponseEntity<?> registerUser(@Valid @RequestBody Chef user) {
+
+        if (chefService.notRegistered(user)){
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            chefService.addUser(user);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
     //Todo: implement registration endpoint
 
     @PutMapping("/api/recipe/{id}")
