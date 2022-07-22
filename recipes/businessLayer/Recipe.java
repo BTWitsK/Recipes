@@ -35,9 +35,9 @@ public class Recipe {
     @Column(name = "DATE")
     private LocalDateTime date;
 
+    @JsonIgnore
     @ManyToOne
-    @NotBlank
-    @JoinColumn(name = "ID")
+    @JoinColumn
     private Chef author;
 
     @NotBlank

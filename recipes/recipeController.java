@@ -105,9 +105,8 @@ public class recipeController {
             if (recipeService.isAuthor(recipe.get(), author)) {
                 recipeService.deleteRecipe(recipe.get());
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            } else {
-                new ResponseEntity<>(HttpStatus.FORBIDDEN);
             }
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }

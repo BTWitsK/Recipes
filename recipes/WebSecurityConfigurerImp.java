@@ -26,8 +26,8 @@ public class WebSecurityConfigurerImp extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .mvcMatchers("/api/recipe/*", "/actuator/**").authenticated()
                 .mvcMatchers("api/register", "/actuator/shutdown").permitAll()
+                .mvcMatchers("/api/recipe/*", "/actuator/*").authenticated()
                 .and()
                 .csrf().disable()
                 .httpBasic();
