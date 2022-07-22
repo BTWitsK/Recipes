@@ -50,5 +50,4 @@ public class Recipe {
     private List<String> directions;
 }
 
-//Todo: create User entity calling it chef
 
