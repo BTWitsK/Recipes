@@ -6,8 +6,13 @@
     <img src="https://ictacademy.com.ng/wp-content/uploads/2020/02/1200px-JetBrains_Logo_2016.svg_.png" alt="Logo" height="80">
   </a>
 
-<p align="center">Recipes is a graduate project for the Java Backend Developer track. It uses the following technologies:
-<p align="center"><img src="https://img.icons8.com/color/30/000000/java-coffee-cup-logo--v1.png" alt="Java"><img src="https://img.icons8.com/color/30/000000/spring-logo.png" alt="Spring Framework"><img src="https://img.icons8.com/color/30/000000/postgreesql.png"/>
+<p align="center">Recipes is a graduate project for the Java Backend Developer track. It uses the following technologies: 
+<ls>
+<li>Language: Java</li>
+<li>Spring: MVC, Security, Web </li>
+<li>Databases: H2</li>
+<li>Build: Gradle</li>
+</ls>
 </p>
 
 ## About
