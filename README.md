@@ -24,7 +24,7 @@ What you’ll do and what you’ll learn
 <details open="open">
   <summary>Task Details</summary>
   <ol>
-  <li><a href="Tasks/1-First-Recipe/README.md">First Recipe</a>: Create a Spring Boot Project with Endpoints</li>
+  <li><a href="/Tasks/1-First-Recipe/README.md">First Recipe</a>: Create a Spring Boot Project with Endpoints</li>
   <li><a href="/Tasks/2-Multiple-Recipes/README.md">Multiple Recipes</a>: Save and Delete recipes in memory</li>
   <li><a href="/Tasks/3-Store-A-Recipe/README.md">Store a Recipe</a>: Save and Delete Recipes from a database</li>
   <li><a href="/Tasks/4-Sort-And-Update/readme.md">sort & update</a> : filter results with queries</li>
