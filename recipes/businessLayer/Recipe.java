@@ -11,6 +11,9 @@ import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Entity class representing recipe table in database
+ */
 @Entity
 @Data
 @AllArgsConstructor

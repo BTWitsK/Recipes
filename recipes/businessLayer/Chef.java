@@ -12,6 +12,11 @@ import javax.validation.constraints.*;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * This class is an Entity representing the User table
+ * in the Recipes database
+ * @author Kae Mattis
+ */
 @Entity
 @Data
 @AllArgsConstructor
@@ -19,6 +24,7 @@ import java.util.List;
 @Table(name = "USERS")
 public class Chef implements UserDetails {
     @Id
+    //basic regex patter to validate user's email
     @Pattern(regexp = ".+@.+\\..+")
     @NotNull
     @Column(name = "EMAIL")

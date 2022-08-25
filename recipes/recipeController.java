@@ -11,10 +11,14 @@ import recipes.businessLayer.*;
 import javax.validation.Valid;
 import java.util.*;
 
+
+/**
+ * Controller class to handle all requests to the server
+ * @author Kae Mattis
+ */
 @RestController
 @Validated
 public class recipeController {
-    //todo: restrict deleting recipes only to authors of them
     @Autowired
     ChefService chefService;
 
@@ -24,6 +28,11 @@ public class recipeController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    /**
+     * Looks for specific recipe using the provided id
+     * @param id Long provided as a Path Variable
+     * @return JSON object of recipe if it is found in database, 404 Status otherwise
+     */
     @GetMapping("/api/recipe/{id}")
     public ResponseEntity<?> getRecipe(@PathVariable long id) {
         Optional<Recipe> recipe = recipeService.getRecipeById(id);
@@ -33,6 +42,13 @@ public class recipeController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    /**
+     * Looks for recipe using Request Parameters
+     * @param category type of recipe to look for in the database
+     * @param name specific recipe to look for in the database
+     * @return JSON array representing all recipes containing the specified category, or JSON array
+     * representing al the recipes containing the specified name, if no recipes found returns an empty array
+     */
     @GetMapping("/api/recipe/search")
     public ResponseEntity<?> searchForRecipe(@RequestParam(name = "category", required = false) String category,
                                              @RequestParam(name = "name", required = false) String name) {
@@ -51,6 +67,12 @@ public class recipeController {
                         .orElse(Collections.emptyList()), HttpStatus.OK);
     }
 
+    /**
+     * Adds new recipe to database
+     * @param user authenticated user
+     * @param recipe JSON object representing the recipe to be added to database
+     * @return JSON object with recipe id that has been added OK HTTP status
+     */
     @PostMapping("/api/recipe/new")
     public ResponseEntity<?> postRecipe(Authentication user, @Valid @RequestBody Recipe recipe) {
         Chef currentChef = (Chef) user.getPrincipal();
@@ -60,6 +82,11 @@ public class recipeController {
         return new ResponseEntity<>(Map.of("id", recipe.getId()), HttpStatus.OK);
     }
 
+    /**
+     * Adds user to database
+     * @param user JSON object representing the user to be added
+     * @return OK status if user object meets the required specifications, bad request otherwise
+     */
     @PostMapping("/api/register")
     public ResponseEntity<?> registerUser(@Valid @RequestBody Chef user) {
 
@@ -71,6 +98,14 @@ public class recipeController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Updates recipe already present in the database if the current user is the author of said recipe
+     * @param user Authenticated user
+     * @param id long representing the id of the recipe to be updated
+     * @param recipe JSON object representing the information of the new recipe that is to be updated
+     * @return Forbidden if the user is not the creator of the recipe, no content if the recipe was updated,
+     * Not found if there was no recipe found with that id
+     */
     @PutMapping("/api/recipe/{id}")
     public ResponseEntity<?> updateRecipe(Authentication user,
                                           @PathVariable long id, @Valid @RequestBody Recipe recipe) {
@@ -95,6 +130,13 @@ public class recipeController {
         }
     }
 
+    /**
+     * Deletes recipe from database
+     * @param user Authorized user
+     * @param id long representing the id of the recipe to be deleted
+     * @return No content if deletion is successful, forbidden if the current user
+     * didn't create the recipe, not found if there is no recipe with the id
+     */
     @DeleteMapping("/api/recipe/{id}")
     public ResponseEntity<?> deleteRecipe(Authentication user, @PathVariable long id) {
         Chef currentChef = (Chef) user.getPrincipal();

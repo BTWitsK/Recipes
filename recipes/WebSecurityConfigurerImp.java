@@ -10,6 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import recipes.businessLayer.ChefService;
 
+/**
+ * Class implements Web Security which is used to authorize users
+ * as well as encrypt passwords
+ */
 @EnableWebSecurity
 public class WebSecurityConfigurerImp extends WebSecurityConfigurerAdapter {
 
